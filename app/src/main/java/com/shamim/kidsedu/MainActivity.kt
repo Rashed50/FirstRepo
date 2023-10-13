@@ -1,5 +1,6 @@
 package com.shamim.kidsedu
 
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.AdapterView
@@ -11,7 +12,7 @@ import com.shamim.kidsedu.view.adapter.GridRVAdapter
 class MainActivity : AppCompatActivity() {
 
     lateinit var homeGridview: GridView
-    lateinit var homeGridList: GridViewModal
+    private lateinit var homeGridList: GridViewModal
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,5 +32,10 @@ class MainActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    fun getScreenWidth(): Int {
+        val mainWidth = Resources.getSystem().displayMetrics.widthPixels / 3
+        return mainWidth
     }
 }

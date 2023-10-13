@@ -56,10 +56,10 @@ internal class GridRVAdapter(
 		// on below line we are initializing our course image view 
 		// and course text view with their ids.
 		imageView = convertView!!.findViewById(R.id.imageView)
-		titleTv = convertView.findViewById(R.id.titleTv)
+		//titleTv = convertView.findViewById(R.id.titleTv)
 		imageView.setImageResource(modalList[position].image!!)
 		// on below line we are setting text in our course text view.
-		titleTv.text = modalList[position].title!!
+		//titleTv.text = modalList[position].title!!
 		// at last we are returning our convert view.
 		return convertView
 	}

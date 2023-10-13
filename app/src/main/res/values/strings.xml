@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">KidsEdu</string>
+    <string-array name="title">
+        <item>Test</item>
+        <item>Test</item>
+        <item>Test</item>
+        <item>Test</item>
+        <item>Test</item>
+        <item>Test</item>
+        <item>Test</item>
+        <item>Test</item>
+        <item>Test</item>
+        <item>Test</item>
+        <item>Test</item>
+    </string-array>
+
 </resources>

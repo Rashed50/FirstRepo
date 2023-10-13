@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         homeGridview.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
 
             Toast.makeText(
-                applicationContext, homeGridList.getDataList()[position].title + " selected",
+                applicationContext, " selected",
                 Toast.LENGTH_SHORT
             ).show()
         }

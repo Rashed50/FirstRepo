@@ -3,23 +3,17 @@ package com.shamim.kidsedu.model
 import com.shamim.kidsedu.R
 
 data class GridViewModal(
-    val title: String? = null,
-    val image: Int? = null
-){
+    var image: Int? = null
+) {
     private var dataList = ArrayList<GridViewModal>()
 
-
-    fun getDataList():List<GridViewModal>{
-
-
-        dataList.add(GridViewModal("Letter", R.drawable.image))
-        dataList.add(GridViewModal("Design", R.drawable.image))
-        dataList.add(GridViewModal("Editing ", R.drawable.image))
-        dataList.add(GridViewModal("Download", R.drawable.image))
-        dataList.add(GridViewModal("Alphabet ", R.drawable.image))
-        dataList.add(GridViewModal("Background", R.drawable.image))
-        dataList.add(GridViewModal("Letter", R.drawable.image))
-        dataList.add(GridViewModal("Download", R.drawable.image))
+    // ["write.png","alphabets.png", "animals.png", "bathroom.png", "birds.png", "bodyparts.png", "color.png", "day.png", "dress.png", "electronics.png","fish.png","flowers.png","fruits.png","furniture.png","insects.png","kitchen.png","maps.png","month.png","numbers.png","shapes.png","solarsystem.png","sports.png","vegetables.png","vehicles.png","vitamin.png","mathsign.png"]
+    fun getDataList(): List<GridViewModal> {
+        val data = listOf<Int>(R.drawable.write, R.drawable.alphabets, R.drawable.animals)
+        dataList.clear()
+        data.forEach { mData ->
+            dataList.add(GridViewModal(image = mData))
+        }
 
         return dataList
     }

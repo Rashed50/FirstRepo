@@ -1,11 +1,11 @@
-package com.shamim.kidsedu
+package com.shamim.kidsedu.view
 
-import android.content.res.Resources
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.GridView
-import android.widget.Toast
+import com.shamim.kidsedu.R
 import com.shamim.kidsedu.model.GridViewModal
 import com.shamim.kidsedu.view.adapter.GridRVAdapter
 
@@ -26,11 +26,10 @@ class MainActivity : AppCompatActivity() {
         homeGridview.adapter = gridRVAdapter
 
         homeGridview.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-
-            Toast.makeText(
-                applicationContext, " selected",
-                Toast.LENGTH_SHORT
-            ).show()
+            val data = position+1
+            val intent = Intent(this,PlayActivity::class.java)
+            intent.putExtra("key", data.toString())
+            startActivity(intent)
         }
     }
 }

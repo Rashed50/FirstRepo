@@ -2,6 +2,7 @@ package com.shamim.kidsedu.view
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -42,8 +43,16 @@ class PlayActivity : AppCompatActivity(), OnItemEventClickListener {
 
         _binding.playRecyclerview.adapter = adapter
 
+        val layoutManager: LinearLayoutManager = object : LinearLayoutManager(this) {
+            override fun canScrollVertically(): Boolean {
+                return false
+            }
 
-
+            override fun canScrollHorizontally(): Boolean {
+                return false
+            }
+        }
+        _binding.playRecyclerview.layoutManager = layoutManager
     }
 
     override fun home() {
@@ -53,22 +62,22 @@ class PlayActivity : AppCompatActivity(), OnItemEventClickListener {
     override fun autoPlay(playModel: PlayModel, position: Int) {
 
 
-//        val isPlaying = position == currentPlayingPosition
-//
-//        mediaPlayer = MediaPlayer.create(this, playModel.audio!!)
-//
+        val isPlaying = position == currentPlayingPosition
+
+        mediaPlayer = MediaPlayer.create(this, playModel.audio!!)
+        mediaPlayer?.start()
 //        if (isPlaying) {
 //            mediaPlayer?.start()
 //        } else {
 //          stopMedia()
 //        }
-//        mediaPlayer?.setOnPreparedListener {
-//
-//            val duration = mediaPlayer?.duration
-//            val durationInSeconds = (duration?.div(1000))
-//            Log.d("audio", durationInSeconds.toString())
-//
-//        }
+        mediaPlayer?.setOnPreparedListener {
+
+            val duration = mediaPlayer?.duration
+            val durationInSeconds = (duration?.div(1000))
+            Log.d("audio", durationInSeconds.toString())
+
+        }
 
 
     }
@@ -82,10 +91,7 @@ class PlayActivity : AppCompatActivity(), OnItemEventClickListener {
     }
 
     override fun next() {
-        val  imageCurrentPosition=  (_binding.playRecyclerview.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-        if(imageCurrentPosition<0){
-            _binding.playRecyclerview.smoothScrollToPosition(imageCurrentPosition+1)
-        }
+
     }
 
     private fun stopMedia() {

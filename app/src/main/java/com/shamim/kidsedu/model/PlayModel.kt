@@ -7,23 +7,12 @@ data class PlayModel(val image: Int?= null, val audio: Int?= null) {
 
     fun playDataList():List<PlayModel>{
 
-        val alfabetaImage = listOf<Int>(
-            R.drawable.a,
-            R.drawable.b,
-            R.drawable.c,
-        )
-        val audio = listOf<Int>(
-            R.raw.a,
-            R.raw.b,
-            R.raw.c,
-
-        )
         dataList.clear()
-        alfabetaImage.forEach { image->
-          audio.forEach { audio->
-              dataList.addAll(listOf(PlayModel(image,audio)))
-          }
-        }
+        dataList.add(PlayModel( R.drawable.a, R.raw.a))
+        dataList.add(PlayModel( R.drawable.b, R.raw.b))
+        dataList.add(PlayModel( R.drawable.c, R.raw.c))
+
+
         return  dataList
     }
 }

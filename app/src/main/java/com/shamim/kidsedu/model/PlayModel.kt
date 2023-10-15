@@ -2,7 +2,7 @@ package com.shamim.kidsedu.model
 
 import com.shamim.kidsedu.R
 
-data class PlayModel(val image: Int?= null, val audio: String?= null) {
+data class PlayModel(val image: Int?= null, val audio: Int?= null) {
     private var dataList = ArrayList<PlayModel>()
 
     fun playDataList():List<PlayModel>{
@@ -12,10 +12,11 @@ data class PlayModel(val image: Int?= null, val audio: String?= null) {
             R.drawable.b,
             R.drawable.c,
         )
-        val audio = listOf<String>(
-            "A",
-            "B",
-            "C"
+        val audio = listOf<Int>(
+            R.raw.a,
+            R.raw.b,
+            R.raw.c,
+
         )
         dataList.clear()
         alfabetaImage.forEach { image->

@@ -1,22 +1,27 @@
 package com.shamim.kidsedu.view
 
-import androidx.appcompat.app.AppCompatActivity
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.shamim.kidsedu.R
 import com.shamim.kidsedu.databinding.ActivityPlayBinding
 import com.shamim.kidsedu.model.PlayModel
 import com.shamim.kidsedu.view.adapter.OnItemEventClickListener
 import com.shamim.kidsedu.view.adapter.PlayAdapter
 
-class PlayActivity : AppCompatActivity(), OnItemEventClickListener {
 
+class PlayActivity : AppCompatActivity(), OnItemEventClickListener {
+    private var mediaPlayer: MediaPlayer? = null
     private lateinit var _binding: ActivityPlayBinding
 
     private lateinit var adapter: PlayAdapter
     private lateinit var playModel: PlayModel
+
+    var currentPlayingPosition = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -36,17 +41,66 @@ class PlayActivity : AppCompatActivity(), OnItemEventClickListener {
         adapter = PlayAdapter(data, this)
 
         _binding.playRecyclerview.adapter = adapter
+
+
+
     }
 
     override fun home() {
         finish()
     }
 
-    override fun autoPlay(playModel: PlayModel) {
+    override fun autoPlay(playModel: PlayModel, position: Int) {
+
+
+//        val isPlaying = position == currentPlayingPosition
+//
+//        mediaPlayer = MediaPlayer.create(this, playModel.audio!!)
+//
+//        if (isPlaying) {
+//            mediaPlayer?.start()
+//        } else {
+//          stopMedia()
+//        }
+//        mediaPlayer?.setOnPreparedListener {
+//
+//            val duration = mediaPlayer?.duration
+//            val durationInSeconds = (duration?.div(1000))
+//            Log.d("audio", durationInSeconds.toString())
+//
+//        }
+
 
     }
 
     override fun music(isOn: Boolean) {
 
+    }
+
+    override fun preview() {
+
+    }
+
+    override fun next() {
+        val  imageCurrentPosition=  (_binding.playRecyclerview.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        if(imageCurrentPosition<0){
+            _binding.playRecyclerview.smoothScrollToPosition(imageCurrentPosition+1)
+        }
+    }
+
+    private fun stopMedia() {
+        if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+            mediaPlayer!!.stop()
+            mediaPlayer!!.release()
+            mediaPlayer = null
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mediaPlayer != null) {
+            mediaPlayer?.release()
+            mediaPlayer = null
+        }
     }
 }

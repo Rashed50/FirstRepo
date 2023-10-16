@@ -52,7 +52,7 @@ class PlayActivity : AppCompatActivity() {
 
         //Read Category Data
         for (i in getCategoryData(this).iterator()) {
-            if (i.category_id == 1){
+            if (i.category_id == 2){
                 data.add(i)
             }
         }
@@ -77,10 +77,10 @@ class PlayActivity : AppCompatActivity() {
             if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount + 1)) {
                 layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() - 1)
                 currentPlayingPosition--
-//                if (data[currentPlayingPosition].audio != null) {
-//                    mediaPlayer = MediaPlayer.create(this, data[currentPlayingPosition].audio!!)
-//                    mediaPlayer?.start()
-//                }
+                if (data[currentPlayingPosition].image_sound != null) {
+                    val audio = data[currentPlayingPosition].image_sound + ".mp3"
+                    startSound(audio)
+                }
             }
 
         }
@@ -88,10 +88,8 @@ class PlayActivity : AppCompatActivity() {
             if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount - 1)) {
                 layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() + 1)
                 currentPlayingPosition++
-//                if (data[currentPlayingPosition].audio != null) {
-//                    mediaPlayer = MediaPlayer.create(this, data[currentPlayingPosition].audio!!)
-//                    mediaPlayer?.start()
-//                }
+                val audio = data[currentPlayingPosition].image_sound + ".mp3"
+                startSound(audio)
             }
 
         }
@@ -112,8 +110,7 @@ class PlayActivity : AppCompatActivity() {
         }
 
         _binding.autoPlay.setOnClickListener {
-            startSound("a.mp3")
-            Toast.makeText(this, "000000", Toast.LENGTH_SHORT).show()
+            startSound("A.mp3")
         }
     }
 

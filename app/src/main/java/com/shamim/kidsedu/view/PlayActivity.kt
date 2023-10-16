@@ -34,7 +34,6 @@ class PlayActivity : AppCompatActivity() {
     private var currentPlayingPosition = 0
     private var isSound = false
 
-    private var  mediaManager = MediaPlayerManager()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -77,9 +76,14 @@ class PlayActivity : AppCompatActivity() {
             if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount + 1)) {
                 layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() - 1)
                 currentPlayingPosition--
-                if (data[currentPlayingPosition].image_sound != null) {
-                    val audio = data[currentPlayingPosition].image_sound + ".mp3"
-                    startSound(audio)
+                try {
+                    if (data[currentPlayingPosition].image_sound != null) {
+                        val audio = data[currentPlayingPosition].image_sound + ".mp3"
+                        startSound(audio)
+                    }
+                }
+                catch (e:Exception){
+                    e.printStackTrace()
                 }
             }
 
@@ -88,8 +92,15 @@ class PlayActivity : AppCompatActivity() {
             if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount - 1)) {
                 layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() + 1)
                 currentPlayingPosition++
-                val audio = data[currentPlayingPosition].image_sound + ".mp3"
-                startSound(audio)
+                try {
+                    if (data[currentPlayingPosition].image_sound != null) {
+                        val audio = data[currentPlayingPosition].image_sound + ".mp3"
+                        startSound(audio)
+                    }
+                }
+                catch (e:Exception){
+                    e.printStackTrace()
+                }
             }
 
         }

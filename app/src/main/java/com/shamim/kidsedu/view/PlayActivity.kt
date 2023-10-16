@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,7 @@ class PlayActivity : AppCompatActivity() {
     private lateinit var playModel: PlayModel
 
     private var currentPlayingPosition = 0
+    private var isSound = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -77,10 +79,22 @@ class PlayActivity : AppCompatActivity() {
             }
 
         }
-    }
 
-    fun home() {
-        finish()
+        _binding.soundBtn.setOnClickListener {
+            if (isSound){
+                isSound = false
+                music(isSound)
+            }
+            else{
+                isSound = true
+                music(isSound)
+            }
+
+        }
+
+        _binding.homeBtn.setOnClickListener {
+            finish()
+        }
     }
 
     fun autoPlay(playModel: PlayModel) {
@@ -97,8 +111,13 @@ class PlayActivity : AppCompatActivity() {
 
     }
 
-    fun music(isOn: Boolean) {
-
+    private fun music(isSound: Boolean) {
+        if (isSound){
+            Toast.makeText(this, "1111111", Toast.LENGTH_SHORT).show()
+        }
+        else{
+            Toast.makeText(this, "000000", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun stopMedia() {

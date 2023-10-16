@@ -1,5 +1,9 @@
 package com.shamim.kidsedu.view
 
+import android.content.Context
+import android.content.res.AssetFileDescriptor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
@@ -9,11 +13,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 import com.shamim.kidsedu.R
 import com.shamim.kidsedu.databinding.ActivityPlayBinding
+import com.shamim.kidsedu.model.MainDataModelItem
 import com.shamim.kidsedu.model.PlayModel
-import com.shamim.kidsedu.view.adapter.OnItemEventClickListener
+import com.shamim.kidsedu.utils.MediaPlayerManager
 import com.shamim.kidsedu.view.adapter.PlayAdapter
+import java.io.IOException
 
 
 class PlayActivity : AppCompatActivity() {
@@ -25,6 +33,8 @@ class PlayActivity : AppCompatActivity() {
 
     private var currentPlayingPosition = 0
     private var isSound = false
+
+    private var  mediaManager = MediaPlayerManager()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -37,11 +47,17 @@ class PlayActivity : AppCompatActivity() {
         val category: String = intent.getStringExtra("key").toString()
 
         playModel = PlayModel()
-        var data = ArrayList<PlayModel>()
+        val data = ArrayList<MainDataModelItem>()
         data.clear()
-        data = playModel.playDataList() as ArrayList<PlayModel>
 
-        adapter = PlayAdapter(data)
+        //Read Category Data
+        for (i in getCategoryData(this).iterator()) {
+            if (i.category_id == 1){
+                data.add(i)
+            }
+        }
+        Log.d("data", data.toString())
+        adapter = PlayAdapter(this,data)
 
         _binding.playRecyclerview.adapter = adapter
 
@@ -61,10 +77,10 @@ class PlayActivity : AppCompatActivity() {
             if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount + 1)) {
                 layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() - 1)
                 currentPlayingPosition--
-                if (data[currentPlayingPosition].audio != null) {
-                    mediaPlayer = MediaPlayer.create(this, data[currentPlayingPosition].audio!!)
-                    mediaPlayer?.start()
-                }
+//                if (data[currentPlayingPosition].audio != null) {
+//                    mediaPlayer = MediaPlayer.create(this, data[currentPlayingPosition].audio!!)
+//                    mediaPlayer?.start()
+//                }
             }
 
         }
@@ -72,20 +88,19 @@ class PlayActivity : AppCompatActivity() {
             if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount - 1)) {
                 layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() + 1)
                 currentPlayingPosition++
-                if (data[currentPlayingPosition].audio != null) {
-                    mediaPlayer = MediaPlayer.create(this, data[currentPlayingPosition].audio!!)
-                    mediaPlayer?.start()
-                }
+//                if (data[currentPlayingPosition].audio != null) {
+//                    mediaPlayer = MediaPlayer.create(this, data[currentPlayingPosition].audio!!)
+//                    mediaPlayer?.start()
+//                }
             }
 
         }
 
         _binding.soundBtn.setOnClickListener {
-            if (isSound){
+            if (isSound) {
                 isSound = false
                 music(isSound)
-            }
-            else{
+            } else {
                 isSound = true
                 music(isSound)
             }
@@ -94,6 +109,11 @@ class PlayActivity : AppCompatActivity() {
 
         _binding.homeBtn.setOnClickListener {
             finish()
+        }
+
+        _binding.autoPlay.setOnClickListener {
+            startSound("a.mp3")
+            Toast.makeText(this, "000000", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -111,11 +131,32 @@ class PlayActivity : AppCompatActivity() {
 
     }
 
-    private fun music(isSound: Boolean) {
-        if (isSound){
-            Toast.makeText(this, "1111111", Toast.LENGTH_SHORT).show()
+    private fun startSound(filename: String) {
+        var afd: AssetFileDescriptor? = null
+        try {
+            afd = resources.assets.openFd(filename)
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
-        else{
+        val player = MediaPlayer()
+        try {
+            assert(afd != null)
+            player.setDataSource(afd!!.fileDescriptor, afd.startOffset, afd.length)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        try {
+            player.prepare()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        player.start()
+    }
+
+    private fun music(isSound: Boolean) {
+        if (isSound) {
+            Toast.makeText(this, "1111111", Toast.LENGTH_SHORT).show()
+        } else {
             Toast.makeText(this, "000000", Toast.LENGTH_SHORT).show()
         }
     }
@@ -134,5 +175,21 @@ class PlayActivity : AppCompatActivity() {
             mediaPlayer?.release()
             mediaPlayer = null
         }
+    }
+
+
+    private fun getCategoryData(context: Context): List<MainDataModelItem> {
+
+        lateinit var jsonString: String
+        try {
+            jsonString = context.assets.open("gameJsonData.json")
+                .bufferedReader()
+                .use { it.readText() }
+        } catch (ioException: IOException) {
+            Log.d("Error", ioException.toString())
+        }
+
+        val listCategoryType = object : TypeToken<List<MainDataModelItem>>() {}.type
+        return Gson().fromJson(jsonString, listCategoryType)
     }
 }

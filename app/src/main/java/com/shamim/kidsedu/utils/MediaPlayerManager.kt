@@ -7,7 +7,8 @@ class MediaPlayerManager {
     private var mediaPlayer: MediaPlayer? = null
     private var currentPlayingPosition = -1
 
-    fun playMedia(mediaUrl: Int) {
+
+    fun playMedia(mediaUrl: String) {
         try {
             mediaPlayer?.let {
                 it.stop()
@@ -15,8 +16,8 @@ class MediaPlayerManager {
             }
 
             mediaPlayer = MediaPlayer().apply {
-                mediaUrl
-                prepare()
+                mediaPlayer?.setDataSource(mediaUrl)
+//                prepare()
                 start()
                 setOnCompletionListener {
                     stopMedia()

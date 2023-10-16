@@ -15,14 +15,14 @@ import com.shamim.kidsedu.view.adapter.OnItemEventClickListener
 import com.shamim.kidsedu.view.adapter.PlayAdapter
 
 
-class PlayActivity : AppCompatActivity(), OnItemEventClickListener {
+class PlayActivity : AppCompatActivity() {
     private var mediaPlayer: MediaPlayer? = null
     private lateinit var _binding: ActivityPlayBinding
 
     private lateinit var adapter: PlayAdapter
     private lateinit var playModel: PlayModel
 
-    var currentPlayingPosition = -1
+    private var currentPlayingPosition = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -39,7 +39,7 @@ class PlayActivity : AppCompatActivity(), OnItemEventClickListener {
         data.clear()
         data = playModel.playDataList() as ArrayList<PlayModel>
 
-        adapter = PlayAdapter(data, this)
+        adapter = PlayAdapter(data)
 
         _binding.playRecyclerview.adapter = adapter
 
@@ -49,28 +49,44 @@ class PlayActivity : AppCompatActivity(), OnItemEventClickListener {
             }
 
             override fun canScrollHorizontally(): Boolean {
-                return false
+                return true
             }
         }
+
         _binding.playRecyclerview.layoutManager = layoutManager
+
+        _binding.previewBtn.setOnClickListener {
+            if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount + 1)) {
+                layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() - 1)
+                currentPlayingPosition--
+                if (data[currentPlayingPosition].audio != null) {
+                    mediaPlayer = MediaPlayer.create(this, data[currentPlayingPosition].audio!!)
+                    mediaPlayer?.start()
+                }
+            }
+
+        }
+        _binding.nextBtn.setOnClickListener {
+            if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount - 1)) {
+                layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() + 1)
+                currentPlayingPosition++
+                if (data[currentPlayingPosition].audio != null) {
+                    mediaPlayer = MediaPlayer.create(this, data[currentPlayingPosition].audio!!)
+                    mediaPlayer?.start()
+                }
+            }
+
+        }
     }
 
-    override fun home() {
+    fun home() {
         finish()
     }
 
-    override fun autoPlay(playModel: PlayModel, position: Int) {
-
-
-        val isPlaying = position == currentPlayingPosition
+    fun autoPlay(playModel: PlayModel) {
 
         mediaPlayer = MediaPlayer.create(this, playModel.audio!!)
         mediaPlayer?.start()
-//        if (isPlaying) {
-//            mediaPlayer?.start()
-//        } else {
-//          stopMedia()
-//        }
         mediaPlayer?.setOnPreparedListener {
 
             val duration = mediaPlayer?.duration
@@ -79,18 +95,9 @@ class PlayActivity : AppCompatActivity(), OnItemEventClickListener {
 
         }
 
-
     }
 
-    override fun music(isOn: Boolean) {
-
-    }
-
-    override fun preview() {
-
-    }
-
-    override fun next() {
+    fun music(isOn: Boolean) {
 
     }
 

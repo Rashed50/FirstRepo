@@ -8,9 +8,9 @@ data class PlayModel(val image: Int?= null, var audio: Int?= null) {
     fun playDataList():List<PlayModel>{
 
         dataList.clear()
-        dataList.add(PlayModel( R.drawable.a, R.raw.a))
-        dataList.add(PlayModel( R.drawable.b, R.raw.b))
-        dataList.add(PlayModel( R.drawable.c, R.raw.c))
+//        dataList.add(PlayModel( R.drawable.a, R.raw.a))
+//        dataList.add(PlayModel( R.drawable.b, R.raw.b))
+//        dataList.add(PlayModel( R.drawable.c, R.raw.c))
 
 
         return  dataList

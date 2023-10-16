@@ -2,8 +2,6 @@ package com.shamim.kidsedu.view
 
 import android.content.Context
 import android.content.res.AssetFileDescriptor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
@@ -18,8 +16,6 @@ import com.google.gson.Gson
 import com.shamim.kidsedu.R
 import com.shamim.kidsedu.databinding.ActivityPlayBinding
 import com.shamim.kidsedu.model.MainDataModelItem
-import com.shamim.kidsedu.model.PlayModel
-import com.shamim.kidsedu.utils.MediaPlayerManager
 import com.shamim.kidsedu.view.adapter.PlayAdapter
 import java.io.IOException
 
@@ -29,10 +25,10 @@ class PlayActivity : AppCompatActivity() {
     private lateinit var _binding: ActivityPlayBinding
 
     private lateinit var adapter: PlayAdapter
-    private lateinit var playModel: PlayModel
 
     private var currentPlayingPosition = 0
     private var isSound = false
+    private val data = ArrayList<MainDataModelItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,20 +39,21 @@ class PlayActivity : AppCompatActivity() {
         )
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_play)
 
-        val category: String = intent.getStringExtra("key").toString()
+        val category: Int = intent.getIntExtra("key", 0)
 
-        playModel = PlayModel()
-        val data = ArrayList<MainDataModelItem>()
         data.clear()
 
         //Read Category Data
         for (i in getCategoryData(this).iterator()) {
-            if (i.category_id == 2){
+            if (i.category_id == category) {
                 data.add(i)
             }
         }
+//        val audio = data[currentPlayingPosition].image_sound + ".mp3"
+//        startSound(audio)
         Log.d("data", data.toString())
-        adapter = PlayAdapter(this,data)
+        Log.d("data", category.toString())
+        adapter = PlayAdapter(this, data)
 
         _binding.playRecyclerview.adapter = adapter
 
@@ -73,16 +70,23 @@ class PlayActivity : AppCompatActivity() {
         _binding.playRecyclerview.layoutManager = layoutManager
 
         _binding.previewBtn.setOnClickListener {
-            if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount + 1)) {
+            if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount)) {
                 layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() - 1)
                 currentPlayingPosition--
-                try {
+                if (currentPlayingPosition != -1 && currentPlayingPosition != -2 && currentPlayingPosition != -3 && currentPlayingPosition != -4 && currentPlayingPosition != -5
+                    && currentPlayingPosition != -6 && currentPlayingPosition != -7 && currentPlayingPosition != -8 && currentPlayingPosition != -9
+                ) {
+                    Log.d("ddd", currentPlayingPosition.toString())
                     if (data[currentPlayingPosition].image_sound != null) {
                         val audio = data[currentPlayingPosition].image_sound + ".mp3"
                         startSound(audio)
+
                     }
                 }
-                catch (e:Exception){
+
+                try {
+
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
@@ -92,13 +96,14 @@ class PlayActivity : AppCompatActivity() {
             if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount - 1)) {
                 layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() + 1)
                 currentPlayingPosition++
-                try {
-                    if (data[currentPlayingPosition].image_sound != null) {
-                        val audio = data[currentPlayingPosition].image_sound + ".mp3"
-                        startSound(audio)
-                    }
+                if (data[currentPlayingPosition].image_sound != null) {
+                    val audio = data[currentPlayingPosition].image_sound + ".mp3"
+                    startSound(audio)
                 }
-                catch (e:Exception){
+
+                try {
+
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
@@ -125,10 +130,8 @@ class PlayActivity : AppCompatActivity() {
         }
     }
 
-    fun autoPlay(playModel: PlayModel) {
+    fun autoPlay() {
 
-        mediaPlayer = MediaPlayer.create(this, playModel.audio!!)
-        mediaPlayer?.start()
         mediaPlayer?.setOnPreparedListener {
 
             val duration = mediaPlayer?.duration
@@ -148,8 +151,10 @@ class PlayActivity : AppCompatActivity() {
         }
         val player = MediaPlayer()
         try {
-            assert(afd != null)
-            player.setDataSource(afd!!.fileDescriptor, afd.startOffset, afd.length)
+            if (afd != null) {
+                player.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+            }
+
         } catch (e: IOException) {
             e.printStackTrace()
         }

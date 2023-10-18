@@ -76,6 +76,10 @@ class PlayActivity : AppCompatActivity() {
 
         _binding.playRecyclerview.layoutManager = layoutManager
 
+
+        val audio = data[currentPlayingPosition].image_sound + ".mp3"
+        startSound(audio)
+
         _binding.previewBtn.setOnClickListener {
 
             if (currentPlayingPosition > 0){
@@ -141,6 +145,7 @@ class PlayActivity : AppCompatActivity() {
             _binding.previewBtn.isClickable = false
             _binding.nextBtn.isClickable = false
             if (currentPlayingPosition < data.size-1){
+
                 val layoutManager1: LinearLayoutManager = object : LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false){
                     override fun canScrollVertically(): Boolean {
                         return false
@@ -156,19 +161,21 @@ class PlayActivity : AppCompatActivity() {
 
                 timer?.schedule(object : TimerTask() {
                     override fun run() {
+                        if (currentPlayingPosition < data.size-1){
+
                         if ((_binding.playRecyclerview.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition() < adapter.itemCount-1) {
 
                             (_binding.playRecyclerview.layoutManager as LinearLayoutManager).smoothScrollToPosition(
                                 _binding.playRecyclerview, RecyclerView.State(),
                                 (_binding.playRecyclerview.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition() + 1
                             )
-
-                            if (data[currentPlayingPosition].image_sound != null) {
-                                val audio = data[currentPlayingPosition].image_sound + ".mp3"
-                                startSound(audio)
+                                val music = data[currentPlayingPosition].image_sound + ".mp3"
+                                startSound(music)
                                 currentPlayingPosition++
                             }
+
                         }
+
                         Log.d("ddd", "Auto Play $currentPlayingPosition")
                     }
                 }, 0, 3000)

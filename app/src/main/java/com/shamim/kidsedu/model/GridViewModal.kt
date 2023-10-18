@@ -10,7 +10,7 @@ data class GridViewModal(
 
     fun getDataList(): List<GridViewModal> {
         val data = listOf<Int>(
-            R.drawable.write,
+//            R.drawable.write,
             R.drawable.alphabets,
             R.drawable.animals,
             R.drawable.bathroom,

@@ -2,6 +2,7 @@ package com.shamim.kidsedu.view
 
 import android.content.Context
 import android.content.res.AssetFileDescriptor
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
@@ -19,7 +20,6 @@ import com.shamim.kidsedu.databinding.ActivityPlayBinding
 import com.shamim.kidsedu.model.MainDataModelItem
 import com.shamim.kidsedu.view.adapter.PlayAdapter
 import java.io.IOException
-import java.text.BreakIterator
 import java.util.Timer
 import java.util.TimerTask
 
@@ -77,9 +77,11 @@ class PlayActivity : AppCompatActivity() {
         _binding.playRecyclerview.layoutManager = layoutManager
 
         _binding.previewBtn.setOnClickListener {
+
             if (currentPlayingPosition > 0){
                 if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount)) {
                     layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() - 1)
+                    _binding.playRecyclerview.isClickable = false
                     currentPlayingPosition--
                     Log.d("ddd", currentPlayingPosition.toString())
 
@@ -104,6 +106,7 @@ class PlayActivity : AppCompatActivity() {
             try {
                 if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount - 1)) {
                     layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() + 1)
+                    _binding.playRecyclerview.isClickable = false
                     currentPlayingPosition++
                     if (!currentPlayingPosition.toString().contains("-")){
                         if (data[currentPlayingPosition].image_sound != null) {
@@ -132,10 +135,12 @@ class PlayActivity : AppCompatActivity() {
             finish()
         }
 
-        var m = 1
-        _binding.autoPlay.setOnClickListener {
-            if (m ==1){
 
+        _binding.autoPlay.setOnClickListener {
+
+            _binding.previewBtn.isClickable = false
+            _binding.nextBtn.isClickable = false
+            if (currentPlayingPosition < data.size-1){
                 val layoutManager1: LinearLayoutManager = object : LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false){
                     override fun canScrollVertically(): Boolean {
                         return false
@@ -145,10 +150,9 @@ class PlayActivity : AppCompatActivity() {
                         return true
                     }
                 }
-                _binding.playRecyclerview.layoutManager = layoutManager1
 
+                _binding.playRecyclerview.layoutManager = layoutManager1
                 _binding.autoPlay.setImageResource(R.drawable.slideshowon)
-                Toast.makeText(this, "1111111", Toast.LENGTH_SHORT).show()
 
                 timer?.schedule(object : TimerTask() {
                     override fun run() {
@@ -169,7 +173,6 @@ class PlayActivity : AppCompatActivity() {
                     }
                 }, 0, 3000)
             }
-            m = 0
 
         }
 
@@ -202,12 +205,26 @@ class PlayActivity : AppCompatActivity() {
 
     private fun music(isSound: Boolean) {
         if (isSound) {
-            Toast.makeText(this, "1111111", Toast.LENGTH_SHORT).show()
+           _binding.soundBtn.setImageResource(R.drawable.volume_off)
+            updateMuteState(true)
         } else {
-            Toast.makeText(this, "000000", Toast.LENGTH_SHORT).show()
+            _binding.soundBtn.setImageResource(R.drawable.volume_up)
+            updateMuteState(false)
         }
     }
 
+    private fun updateMuteState(mute: Boolean) {
+        this.let {
+            this.getAudioManager(it).adjustStreamVolume(
+                AudioManager.STREAM_MUSIC,
+                if (mute) -100 else 100,
+                0
+            )
+        }
+    }
+
+    private fun getAudioManager(context: Context) =
+        context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private fun stopMedia() {
         if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
             mediaPlayer!!.stop()

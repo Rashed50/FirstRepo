@@ -26,9 +26,8 @@ class MainActivity : AppCompatActivity() {
         homeGridview.adapter = gridRVAdapter
 
         homeGridview.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            val data = position+1
             val intent = Intent(this,PlayActivity::class.java)
-            intent.putExtra("key", data)
+            intent.putExtra("key", position+1)
             startActivity(intent)
         }
     }

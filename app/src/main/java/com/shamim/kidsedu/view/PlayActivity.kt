@@ -77,26 +77,26 @@ class PlayActivity : AppCompatActivity() {
         _binding.playRecyclerview.layoutManager = layoutManager
 
         _binding.previewBtn.setOnClickListener {
-            if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount)) {
-                layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() - 1)
-                currentPlayingPosition--
-                if (currentPlayingPosition != -1 && currentPlayingPosition != -2 && currentPlayingPosition != -3 && currentPlayingPosition != -4 && currentPlayingPosition != -5
-                    && currentPlayingPosition != -6 && currentPlayingPosition != -7 && currentPlayingPosition != -8 && currentPlayingPosition != -9
-                ) {
+            if (currentPlayingPosition > 0){
+                if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount)) {
+                    layoutManager.scrollToPosition(layoutManager.findLastCompletelyVisibleItemPosition() - 1)
+                    currentPlayingPosition--
                     Log.d("ddd", currentPlayingPosition.toString())
+
                     if (data[currentPlayingPosition].image_sound != null) {
                         val audio = data[currentPlayingPosition].image_sound + ".mp3"
                         startSound(audio)
 
                     }
-                }
-
-                try {
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
+//                    if (currentPlayingPosition != -1 && currentPlayingPosition != -2 && currentPlayingPosition != -3 && currentPlayingPosition != -4 && currentPlayingPosition != -5
+//                        && currentPlayingPosition != -6 && currentPlayingPosition != -7 && currentPlayingPosition != -8 && currentPlayingPosition != -9
+//                    ) {
+//
+//                    }
+                    Log.d("ddd", adapter.itemCount.toString())
                 }
             }
+
 
         }
         _binding.nextBtn.setOnClickListener {

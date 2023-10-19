@@ -27,11 +27,9 @@ data class GridViewModal(
             R.drawable.fruits,
             R.drawable.furniture,
             R.drawable.insects,
-            R.drawable.electronics,
-            R.drawable.fish,
             R.drawable.kitchen,
-
             R.drawable.maps,
+
             R.drawable.month,
             R.drawable.numbers,
             R.drawable.shapes,

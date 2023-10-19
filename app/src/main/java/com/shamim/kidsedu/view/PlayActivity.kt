@@ -6,6 +6,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
@@ -140,6 +141,7 @@ class PlayActivity : AppCompatActivity() {
         }
 
 
+        _binding.autoPlay.visibility = View.GONE
         _binding.autoPlay.setOnClickListener {
 
             _binding.previewBtn.isClickable = false

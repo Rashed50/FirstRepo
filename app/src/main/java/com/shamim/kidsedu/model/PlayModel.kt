@@ -1,7 +1,5 @@
 package com.shamim.kidsedu.model
 
-import com.shamim.kidsedu.R
-
 data class PlayModel(val image: Int?= null, var audio: Int?= null) {
     private var dataList = ArrayList<PlayModel>()
 

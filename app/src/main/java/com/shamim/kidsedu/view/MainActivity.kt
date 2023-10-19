@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 //            return
 //        }
 
-        appUpdateManager?.registerListener(listener!!)
+        appUpdateManager?.registerListener(listener)
         val appUpdateInfoTask = appUpdateManager?.appUpdateInfo
         // Checks that the platform will allow the specified type of update.
         Log.d(ContentValues.TAG, "Checking for updates")
@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
-        appUpdateManager?.unregisterListener(listener!!)
+        appUpdateManager?.unregisterListener(listener)
         super.onStop()
     }
 }
